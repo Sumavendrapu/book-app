@@ -1,0 +1,22 @@
+ version: "3.9"
+
+ services:
+  book-app:
+    image: book-app:latest
+    container_name: book-app
+    ports:
+      - "5000:5000"
+    environment:
+      APP_NAME: "BookApp"
+    volumes:
+      - book-data:/app/data
+    networks:
+      - book-network
+
+ volumes:
+  book-data:
+    driver: local
+
+ networks:
+  book-network:
+    driver: bridge

@@ -1,0 +1,60 @@
+
+name: CI - book-app
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        id: vars
+        run: echo "TAG=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: sumavendrapu
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t sumavendrapu/book-app:${{ steps.vars.outputs.TAG }} \
+            .
+
+      - name: Push Docker image
+        run: |
+          docker push sumavendrapu/book-app:${{ steps.vars.outputs.TAG }}
+
+
+  cd:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Update image tag in dp.yml
+        run: |
+          sed -i "s|image: sumavendrapu/book-app:.*|image: sumavendrapu/book-app:${GITHUB_SHA}|" dp.yml
+
+      - name: Commit and push deployment update
+        run: |
+          git config --global user.name "suma vendrapu"
+          git config --global user.email "sumavendrapu@gmail.com"
+
+          git add dp.yml
+          git commit -m "Update book-app image to ${GITHUB_SHA}" || echo "No changes"
+          git push
