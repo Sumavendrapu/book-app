@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 books = [
     "Python Basics",
-    "Docker Fundamentals",
+    "Docker Fundamentals and volumes",
     "DevOps Handbook"
 ]
 
