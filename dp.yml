@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: book-app
-        image: sumavendrapu/book-app:latest
+        image: sumavendrapu/book-app:b17c0c401cc8dd4ac389a1aa650602a919916c8f
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
