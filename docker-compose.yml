@@ -5,7 +5,7 @@
     image: book-app:latest
     container_name: book-app
     ports:
-      - "5000:5000"
+      - "8000:8000"
     environment:
       APP_NAME: "BookApp"
     volumes:
